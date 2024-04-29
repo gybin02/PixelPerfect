@@ -175,8 +175,8 @@ public class PTextView extends Sticker {
     }
 
     @NonNull
-    public PTextView setAlpha(@IntRange(from = 0L, to = 255L) int paramInt) {
-        this.textPaint.setAlpha(paramInt);
+    public PTextView setAlpha(@IntRange(from = 0L, to = 255L) int alpha) {
+        this.textPaint.setAlpha(alpha);
         return this;
     }
 
@@ -196,8 +196,8 @@ public class PTextView extends Sticker {
     }
 
 
-    public PTextView setDrawable(@NonNull Drawable paramDrawable) {
-        this.drawable = paramDrawable;
+    public PTextView setDrawable(@NonNull Drawable drawable) {
+        this.drawable = drawable;
         return this;
     }
 

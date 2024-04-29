@@ -6,7 +6,9 @@ import android.graphics.drawable.Drawable;
 import android.view.MotionEvent;
 import com.example.pixelperfect.Event.StickerIconEvent;
 
-
+/**
+ * 图片贴纸
+ */
 public class BitmapStickerIcon extends DrawableSticker implements StickerIconEvent {
     public static final String ALIGN_HORIZONTALLY = "ALIGN_HORIZONTALLY";
 

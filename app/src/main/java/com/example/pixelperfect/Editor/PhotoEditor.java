@@ -30,6 +30,9 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 编辑控件入口
+ */
 public class PhotoEditor implements BrushViewChangeListener {
     private static final String TAG = "PhotoEditor";
     private List<View> addedViews;

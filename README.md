@@ -41,3 +41,13 @@
 <p>This project is licensed under the <a href="https://opensource.org/licenses/MIT">MIT License</a>.</p>
 </body>
 </html>
+
+## 代码阅读
+
+- 使用GPUImage 实现滤镜
+- 支持贴纸和文字
+- 支持滤镜
+- 支持裁剪
+- 支持遮罩融合
+- 支持背景
+- 首页[PhotoEditorActivity]

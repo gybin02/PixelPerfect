@@ -71,11 +71,11 @@ public class SplashSticker extends Sticker {
     }
 
     @NonNull
-    public SplashSticker setAlpha(@IntRange(from = 0L, to = 255L) int paramInt) {
+    public SplashSticker setAlpha(@IntRange(from = 0L, to = 255L) int alpha) {
         return this;
     }
 
-    public SplashSticker setDrawable(@NonNull Drawable paramDrawable) {
+    public SplashSticker setDrawable(@NonNull Drawable drawable) {
         return this;
     }
 }

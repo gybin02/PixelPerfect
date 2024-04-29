@@ -9,8 +9,13 @@ import android.graphics.drawable.Drawable;
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
+/**
+ * 贴纸基类
+ */
 public abstract class Sticker {
+    /**
+     * 坐标
+     */
     private final float[] boundPoints = new float[8];
 
     private boolean isFlippedHorizontally;
@@ -118,8 +123,8 @@ public abstract class Sticker {
         return pointF;
     }
 
-    public void getCenterPoint(@NonNull PointF paramPointF) {
-        paramPointF.set(getWidth() * 1.0F / 2.0F, getHeight() * 1.0F / 2.0F);
+    public void getCenterPoint(@NonNull PointF pointF) {
+        pointF.set(getWidth() * 1.0F / 2.0F, getHeight() * 1.0F / 2.0F);
     }
 
     public float getCurrentAngle() {
@@ -151,16 +156,16 @@ public abstract class Sticker {
         return pointF;
     }
 
-    public void getMappedCenterPoint(@NonNull PointF paramPointF, @NonNull float[] paramArrayOffloat1, @NonNull float[] paramArrayOffloat2) {
-        getCenterPoint(paramPointF);
-        paramArrayOffloat2[0] = paramPointF.x;
-        paramArrayOffloat2[1] = paramPointF.y;
-        getMappedPoints(paramArrayOffloat1, paramArrayOffloat2);
-        paramPointF.set(paramArrayOffloat1[0], paramArrayOffloat1[1]);
+    public void getMappedCenterPoint(@NonNull PointF pointF, @NonNull float[] mappedBounds, @NonNull float[] boundPoints) {
+        getCenterPoint(pointF);
+        boundPoints[0] = pointF.x;
+        boundPoints[1] = pointF.y;
+        getMappedPoints(mappedBounds, boundPoints);
+        pointF.set(mappedBounds[0], mappedBounds[1]);
     }
 
-    public void getMappedPoints(@NonNull float[] paramArrayOffloat1, @NonNull float[] paramArrayOffloat2) {
-        this.matrix.mapPoints(paramArrayOffloat1, paramArrayOffloat2);
+    public void getMappedPoints(@NonNull float[] dstPoint, @NonNull float[] srcPoint) {
+        this.matrix.mapPoints(dstPoint, srcPoint);
     }
 
 
@@ -197,29 +202,29 @@ public abstract class Sticker {
     }
 
     @NonNull
-    public abstract Sticker setAlpha(@IntRange(from = 0L, to = 255L) int paramInt);
+    public abstract Sticker setAlpha(@IntRange(from = 0L, to = 255L) int alpha);
 
-    public abstract Sticker setDrawable(@NonNull Drawable paramDrawable);
-
-    @NonNull
-    public Sticker setFlippedHorizontally(boolean paramBoolean) {
-        this.isFlippedHorizontally = paramBoolean;
-        return this;
-    }
+    public abstract Sticker setDrawable(@NonNull Drawable drawable);
 
     @NonNull
-    public Sticker setFlippedVertically(boolean paramBoolean) {
-        this.isFlippedVertically = paramBoolean;
+    public Sticker setFlippedHorizontally(boolean isFlippedHorizontally) {
+        this.isFlippedHorizontally = isFlippedHorizontally;
         return this;
     }
 
-    public Sticker setMatrix(@Nullable Matrix paramMatrix) {
-        this.matrix.set(paramMatrix);
+    @NonNull
+    public Sticker setFlippedVertically(boolean isFlippedVertically) {
+        this.isFlippedVertically = isFlippedVertically;
         return this;
     }
 
-    public void setShow(boolean paramBoolean) {
-        this.isShow = paramBoolean;
+    public Sticker setMatrix(@Nullable Matrix matrix) {
+        this.matrix.set(matrix);
+        return this;
+    }
+
+    public void setShow(boolean isShow) {
+        this.isShow = isShow;
     }
 
 }

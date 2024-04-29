@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 public class DrawableSticker extends Sticker {
     private Drawable drawable;
 
-    private Rect realBounds;
+    private Rect realBounds; //真实的矩形位置
 
     public DrawableSticker(Drawable paramDrawable) {
         this.drawable = paramDrawable;
@@ -49,13 +49,13 @@ public class DrawableSticker extends Sticker {
     }
 
     @NonNull
-    public DrawableSticker setAlpha(@IntRange(from = 0L, to = 255L) int paramInt) {
-        this.drawable.setAlpha(paramInt);
+    public DrawableSticker setAlpha(@IntRange(from = 0L, to = 255L) int alpha) {
+        this.drawable.setAlpha(alpha);
         return this;
     }
 
-    public DrawableSticker setDrawable(@NonNull Drawable paramDrawable) {
-        this.drawable = paramDrawable;
+    public DrawableSticker setDrawable(@NonNull Drawable drawable) {
+        this.drawable = drawable;
         return this;
     }
 }

@@ -102,7 +102,13 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-
+/**
+ * 图片编辑首页
+ * 1. 首页包含子功能的保存和退出
+ * 2. 首页包含子功能的操作面板
+ * 3.
+ *
+ */
 @SuppressLint("StaticFieldLeak")
 public class PhotoEditorActivity extends BaseActivity implements OnPhotoEditorListener, View.OnClickListener,HSlFragment.OnFilterSavePhoto, StickerAdapter.OnClickStickerListener, CropperFragment.OnCropPhoto, BrushColorListener, RatioFragment.RatioSaveListener, SquareFragment.SplashDialogListener, ToolsAdapter.OnItemSelected, FilterListener, AdjustListener {
 
@@ -139,14 +145,22 @@ public class PhotoEditorActivity extends BaseActivity implements OnPhotoEditorLi
         }
     };
     public PhotoEditor photoEditor;
+    /**
+     * 编辑图片主控件
+     */
     public PhotoEditorView photo_editor_view;
     private ConstraintLayout constraint_layout_root_view;
     private RecyclerView recycler_view_adjust;
     public RecyclerView recycler_view_filter;
 
     public RecyclerView recycler_view_overlay;
-
+    /**
+     * 首页工具栏
+     */
     public RecyclerView recycler_view_tools;
+    /**
+     * 调整-数据源
+     */
     public AdjustAdapter mAdjustAdapter;
 
 
@@ -876,6 +890,9 @@ public class PhotoEditorActivity extends BaseActivity implements OnPhotoEditorLi
         super.onDestroy();
     }
 
+    /**
+     * 新增贴纸
+     */
     public void addSticker(int item, Bitmap bitmap) {
         this.photo_editor_view.addSticker(new DrawableSticker(new BitmapDrawable(getResources(), bitmap)));
         slideDown(this.linear_layout_wrapper_sticker_list);
@@ -1101,40 +1118,50 @@ public class PhotoEditorActivity extends BaseActivity implements OnPhotoEditorLi
         }
     }
 
-    public void onActivityResult(int i, int i2, @Nullable Intent intent) {
-        super.onActivityResult(i, i2, intent);
-        if (i == 123) {
-            if (i2 == -1) {
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // 处理图像选择返回结果
+        if (requestCode == 123) {
+            if (resultCode == RESULT_OK) {
                 try {
-                    InputStream inputStream = getContentResolver().openInputStream(intent.getData());
+                    // 从 Intent 中获取图像输入流
+                    InputStream inputStream = getContentResolver().openInputStream(data.getData());
+                    // 解码输入流为 Bitmap 对象
                     Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                    float width = (float) bitmap.getWidth();
-                    float height = (float) bitmap.getHeight();
-                    float max = Math.max(width / 1280.0f, height / 1280.0f);
-                    if (max > 1.0f) {
-                        bitmap = Bitmap.createScaledBitmap(bitmap, (int) (width / max), (int) (height / max), false);
+
+                    // 缩放图像以适应最大尺寸为 1280x1280
+                    float width = bitmap.getWidth();
+                    float height = bitmap.getHeight();
+                    float maxScale = Math.max(width / 1280.0f, height / 1280.0f);
+                    if (maxScale > 1.0f) {
+                        bitmap = Bitmap.createScaledBitmap(bitmap, (int) (width / maxScale), (int) (height / maxScale), false);
                     }
-                    if (SystemUtil.rotateBitmap(bitmap, new ExifInterface(inputStream).getAttributeInt(ExifInterface.TAG_ORIENTATION, 1)) != bitmap) {
-                        bitmap.recycle();
-                        bitmap = null;
-                    }
-                    this.photo_editor_view.setImageSource(bitmap);
+
+                    // 旋转图像以匹配方向
+                    int orientation = new ExifInterface(inputStream).getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+                    bitmap = SystemUtil.rotateBitmap(bitmap, orientation);
+
+                    // 设置图像到相册编辑视图中，并更新布局
+                    photo_editor_view.setImageSource(bitmap);
                     updateLayout();
                 } catch (Exception e) {
                     e.printStackTrace();
                     MsgUtil.toastMsg(this, "Error: Can not open image");
                 }
             } else {
+                // 如果选择图像操作被取消，则结束当前 Activity
                 finish();
             }
         }
-        else if (i == 900) {
-            if (intent != null && intent.getStringExtra("MESSAGE").equals("done")){
-                if (BitmapTransfer.bitmap != null){
-                    new loadBitmap().execute(new Bitmap[]{BitmapTransfer.bitmap});
+        // 处理其他 requestCode 的返回结果
+        else if (requestCode == 900) {
+            if (resultCode == RESULT_OK && data != null && "done".equals(data.getStringExtra("MESSAGE"))) {
+                // 如果接收到来自其他 Activity 的 "done" 消息，则加载 Bitmap 并执行相应操作
+                if (BitmapTransfer.bitmap != null) {
+                    new loadBitmap().execute(BitmapTransfer.bitmap);
                 }
             }
-
         }
     }
 
@@ -1213,32 +1240,44 @@ public class PhotoEditorActivity extends BaseActivity implements OnPhotoEditorLi
     }
 
     public void updateLayout() {
+        // 使用 postDelayed() 方法，确保在稍后执行布局更新
         this.photo_editor_view.postDelayed(() -> {
             try {
-                Display defaultDisplay = PhotoEditorActivity.this.getWindowManager().getDefaultDisplay();
-                Point point = new Point();
-                defaultDisplay.getSize(point);
-                int i = point.x;
-                int height = PhotoEditorActivity.this.relative_layout_wrapper_photo.getHeight();
-                int i2 = PhotoEditorActivity.this.photo_editor_view.getGLSurfaceView().getRenderViewport().width;
-                float f = (float) PhotoEditorActivity.this.photo_editor_view.getGLSurfaceView().getRenderViewport().height;
-                float f2 = (float) i2;
-                if (((int) ((((float) i) * f) / f2)) <= height) {
-                    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(-1, -2);
-                    layoutParams.addRule(13);
-                    PhotoEditorActivity.this.photo_editor_view.setLayoutParams(layoutParams);
-                    PhotoEditorActivity.this.photo_editor_view.setVisibility(View.VISIBLE);
+                // 获取屏幕尺寸
+                Display defaultDisplay = getWindowManager().getDefaultDisplay();
+                Point screenSize = new Point();
+                defaultDisplay.getSize(screenSize);
+                int screenWidth = screenSize.x;
+
+                // 获取相册布局的高度
+                int albumHeight = relative_layout_wrapper_photo.getHeight();
+
+                // 获取渲染视口的宽度和高度
+                int renderWidth = photo_editor_view.getGLSurfaceView().getRenderViewport().width;
+                float renderHeight = (float) photo_editor_view.getGLSurfaceView().getRenderViewport().height;
+
+                // 计算新的相册编辑视图的布局参数
+                RelativeLayout.LayoutParams layoutParams;
+                if (((int) ((((float) screenWidth) * renderHeight) / renderWidth)) <= albumHeight) {
+                    // 如果宽度合适，则设置相册编辑视图的宽度为屏幕宽度，高度自适应
+                    layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 } else {
-                    RelativeLayout.LayoutParams layoutParams2 = new RelativeLayout.LayoutParams((int) ((((float) height) * f2) / f), -1);
-                    layoutParams2.addRule(13);
-                    PhotoEditorActivity.this.photo_editor_view.setLayoutParams(layoutParams2);
-                    PhotoEditorActivity.this.photo_editor_view.setVisibility(View.VISIBLE);
+                    // 如果高度合适，则根据渲染视口比例设置相册编辑视图的宽度和高度
+                    int newWidth = (int) ((((float) albumHeight) * renderWidth) / renderHeight);
+                    layoutParams = new RelativeLayout.LayoutParams(newWidth, ViewGroup.LayoutParams.MATCH_PARENT);
                 }
+
+                // 将相册编辑视图的布局参数应用到视图中，并设置可见性
+                layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+                photo_editor_view.setLayoutParams(layoutParams);
+                photo_editor_view.setVisibility(View.VISIBLE);
             } catch (Exception ignored) {
                 ignored.printStackTrace();
             }
-            PhotoEditorActivity.this.mLoading(false);
-        }, 300);
+
+            // 加载完成后隐藏加载状态
+            mLoading(false);
+        }, 300); // 延迟 300 毫秒执行布局更新
     }
 
 
@@ -1272,13 +1311,13 @@ public class PhotoEditorActivity extends BaseActivity implements OnPhotoEditorLi
 
     }
 
-    public void mLoading(boolean z) {
-        if (z) {
-            getWindow().setFlags(16, 16);
+    public void mLoading(boolean fullScreen) {
+        if (fullScreen) {
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
             this.relative_layout_loading.setVisibility(View.VISIBLE);
             return;
         }
-        getWindow().clearFlags(16);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         this.relative_layout_loading.setVisibility(View.GONE);
     }
 }

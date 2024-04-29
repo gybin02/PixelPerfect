@@ -13,7 +13,9 @@ import android.util.AttributeSet;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
-
+/**
+ * 普通的imageView
+ */
 public class FilterImageView extends AppCompatImageView {
     private OnImageChangedListener mOnImageChangedListener;
 

@@ -83,12 +83,12 @@ public class BeautySticker extends Sticker {
     }
 
     @NonNull
-    public BeautySticker setAlpha(@IntRange(from = 0L, to = 255L) int paramInt) {
-        this.drawable.setAlpha(paramInt);
+    public BeautySticker setAlpha(@IntRange(from = 0L, to = 255L) int alpha) {
+        this.drawable.setAlpha(alpha);
         return this;
     }
 
-    public BeautySticker setDrawable(@NonNull Drawable paramDrawable) {
+    public BeautySticker setDrawable(@NonNull Drawable drawable) {
         return this;
     }
 

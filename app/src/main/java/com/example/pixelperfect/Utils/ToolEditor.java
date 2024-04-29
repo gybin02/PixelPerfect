@@ -7,15 +7,15 @@ public enum ToolEditor {
     BEAUTY,
     BODY,
     TEXT,
-    FILTER,
+    FILTER, //滤镜
     CROP,
     PROFILE,
-    STICKER,
-    ADJUST,
-    EFFECT,
+    STICKER, //贴纸
+    ADJUST, //调整
+    EFFECT,//特效
     RATIO,
-    BG,
-    SQUARE,
+    BG, //背景
+    SQUARE, //遮罩
     DRIP
 
 }

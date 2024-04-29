@@ -2,6 +2,9 @@ package com.example.pixelperfect.Listener;
 
 import com.example.pixelperfect.Editor.BrushDrawingView;
 
+/**
+ * 笔刷事件
+ */
 public interface BrushViewChangeListener {
     void onStartDrawing();
 

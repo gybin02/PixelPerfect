@@ -21,14 +21,20 @@ import org.wysaid.view.ImageGLSurfaceView;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 图片显示和编辑主控件
+ */
 public class PhotoEditorView extends StickerView {
 
-    private Bitmap currentBitmap;
-    private BrushDrawingView brushDrawingView;
-    public ImageGLSurfaceView imageGLSurfaceView;
-    private FilterImageView filterImageView;
-    private List<Bitmap> bitmaplist=new ArrayList<>();
-    private int index=-1;
+    private Bitmap currentBitmap;//当前显示的图片
+    private BrushDrawingView brushDrawingView;//画笔View
+    public ImageGLSurfaceView imageGLSurfaceView;//GLView
+    private FilterImageView filterImageView;//滤镜ImageView
+    /**
+     * 撤销重做栈
+     */
+    private List<Bitmap> bitmaplist = new ArrayList<>();
+    private int index = -1;//撤销栈的索引
 
     public PhotoEditorView(Context context) {
         super(context);
@@ -117,7 +123,7 @@ public class PhotoEditorView extends StickerView {
     }
 
     public boolean undo() {
-        Log.d("TAG", "undo: "+index);
+        Log.d("TAG", "undo: " + index);
 
         if (index > 0) {
             setImageSourceUndoRedo(bitmaplist.get(--index));
@@ -129,18 +135,17 @@ public class PhotoEditorView extends StickerView {
     }
 
     public boolean redo() {
-        Log.d("TAG", "redo: "+index);
+        Log.d("TAG", "redo: " + index);
 
-        if (index+1<bitmaplist.size()) {
+        if (index + 1 < bitmaplist.size()) {
 
             setImageSourceUndoRedo(bitmaplist.get(++index));
             return true;
-
-
         }
 
         return false;
     }
+
 
     public Bitmap getCurrentBitmap() {
         return this.currentBitmap;
@@ -165,10 +170,15 @@ public class PhotoEditorView extends StickerView {
         }
     }
 
+    /**
+     * 设置滤镜配置
+     */
     public void setFilterEffect(String str) {
         this.imageGLSurfaceView.setFilterWithConfig(str);
     }
-
+    /**
+     * 设置滤镜强度
+     */
     public void setFilterIntensity(float f) {
         this.imageGLSurfaceView.setFilterIntensity(f);
     }
