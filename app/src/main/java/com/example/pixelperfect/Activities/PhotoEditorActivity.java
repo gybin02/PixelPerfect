@@ -986,7 +986,8 @@ public class PhotoEditorActivity extends BaseActivity implements OnPhotoEditorLi
 
         public Void doInBackground(Void... voidArr) {
             PhotoEditorActivity.this.lstBitmapWithOverlay.clear();
-            PhotoEditorActivity.this.lstBitmapWithOverlay.addAll(OverlayFileAsset.getListBitmapOverlayEffect(ThumbnailUtils.extractThumbnail(PhotoEditorActivity.this.photo_editor_view.getCurrentBitmap(), 100, 100)));
+            Bitmap thumbnail = ThumbnailUtils.extractThumbnail(PhotoEditorActivity.this.photo_editor_view.getCurrentBitmap(), 100, 100);
+            PhotoEditorActivity.this.lstBitmapWithOverlay.addAll(OverlayFileAsset.getListBitmapOverlayEffect(thumbnail));
             return null;
         }
 

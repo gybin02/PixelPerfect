@@ -77,7 +77,7 @@ public class OverlayAdapter extends RecyclerView.Adapter<OverlayAdapter.ViewHold
             view.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
                     OverlayAdapter.this.selectedFilterIndex = ViewHolder.this.getLayoutPosition();
-                    OverlayAdapter.this.filterListener.onFilterSelected(selectedFilterIndex,((OverlayFileAsset.OverlayCode) OverlayAdapter.this.filterBeanList.get(OverlayAdapter.this.selectedFilterIndex)).getImage());
+                    OverlayAdapter.this.filterListener.onFilterSelected(selectedFilterIndex, ((OverlayFileAsset.OverlayCode) OverlayAdapter.this.filterBeanList.get(OverlayAdapter.this.selectedFilterIndex)).image);
                     OverlayAdapter.this.notifyDataSetChanged();
                 }
             });
