@@ -15,7 +15,11 @@ import com.example.pixelperfect.Assets.StickerFileAsset;
 import com.example.pixelperfect.R;
 
 import java.util.List;
-
+/**
+ * 贴纸数据源
+ * 或者类似自己创建Json
+ * https://www.flaticon.com/stickers-pack/birthday-209
+ */
 public class StickerAdapter extends RecyclerView.Adapter<StickerAdapter.ViewHolder> {
 
     public Context context;
@@ -30,10 +34,10 @@ public class StickerAdapter extends RecyclerView.Adapter<StickerAdapter.ViewHold
         void addSticker(int i, Bitmap bitmap);
     }
 
-    public StickerAdapter(Context context2, List<String> list, int i, OnClickStickerListener onClickStickerListener) {
+    public StickerAdapter(Context context2, List<String> list, int screenWidth, OnClickStickerListener onClickStickerListener) {
         this.context = context2;
         this.stickers = list;
-        this.screenWidth = i;
+        this.screenWidth = screenWidth;
         this.stickerListener = onClickStickerListener;
     }
 

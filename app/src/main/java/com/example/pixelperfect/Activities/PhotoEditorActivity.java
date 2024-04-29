@@ -437,56 +437,56 @@ public class PhotoEditorActivity extends BaseActivity implements OnPhotoEditorLi
             }
 
             @NonNull
-            public Object instantiateItem(@NonNull ViewGroup viewGroup, int i) {
+            public Object instantiateItem(@NonNull ViewGroup viewGroup, int position) {
                 View inflate = LayoutInflater.from(PhotoEditorActivity.this.getBaseContext()).inflate(R.layout.sticker_list, null, false);
                 RecyclerView recycler_view_sticker = inflate.findViewById(R.id.recycler_view_sticker);
                 recycler_view_sticker.setHasFixedSize(true);
                 recycler_view_sticker.setLayoutManager(new GridLayoutManager(PhotoEditorActivity.this.getApplicationContext(), 6));
-                switch (i) {
+                switch (position) {
                     case 0:
-                        recycler_view_sticker.setAdapter(new StickerAdapter(PhotoEditorActivity.this.getApplicationContext(), StickerFileAsset.amojiList(), i, PhotoEditorActivity.this));
+                        recycler_view_sticker.setAdapter(new StickerAdapter(PhotoEditorActivity.this.getApplicationContext(), StickerFileAsset.amojiList(), position, PhotoEditorActivity.this));
                         break;
                     case 1:
-                        recycler_view_sticker.setAdapter(new StickerAdapter(PhotoEditorActivity.this.getApplicationContext(), StickerFileAsset.chickenList(), i, PhotoEditorActivity.this));
+                        recycler_view_sticker.setAdapter(new StickerAdapter(PhotoEditorActivity.this.getApplicationContext(), StickerFileAsset.chickenList(), position, PhotoEditorActivity.this));
                         break;
                     case 2:
-                        recycler_view_sticker.setAdapter(new StickerAdapter(PhotoEditorActivity.this.getApplicationContext(), StickerFileAsset.childList(), i, PhotoEditorActivity.this));
+                        recycler_view_sticker.setAdapter(new StickerAdapter(PhotoEditorActivity.this.getApplicationContext(), StickerFileAsset.childList(), position, PhotoEditorActivity.this));
                         break;
                     case 3:
-                        recycler_view_sticker.setAdapter(new StickerAdapter(PhotoEditorActivity.this.getApplicationContext(), StickerFileAsset.christmasList(), i, PhotoEditorActivity.this));
+                        recycler_view_sticker.setAdapter(new StickerAdapter(PhotoEditorActivity.this.getApplicationContext(), StickerFileAsset.christmasList(), position, PhotoEditorActivity.this));
                         break;
                     case 4:
-                        recycler_view_sticker.setAdapter(new StickerAdapter(PhotoEditorActivity.this.getApplicationContext(), StickerFileAsset.cuteList(), i, PhotoEditorActivity.this));
+                        recycler_view_sticker.setAdapter(new StickerAdapter(PhotoEditorActivity.this.getApplicationContext(), StickerFileAsset.cuteList(), position, PhotoEditorActivity.this));
                         break;
                     case 5:
-                        recycler_view_sticker.setAdapter(new StickerAdapter(PhotoEditorActivity.this.getApplicationContext(), StickerFileAsset.emojList(), i, PhotoEditorActivity.this));
+                        recycler_view_sticker.setAdapter(new StickerAdapter(PhotoEditorActivity.this.getApplicationContext(), StickerFileAsset.emojList(), position, PhotoEditorActivity.this));
                         break;
                     case 6:
-                        recycler_view_sticker.setAdapter(new StickerAdapter(PhotoEditorActivity.this.getApplicationContext(), StickerFileAsset.emojiList(), i, PhotoEditorActivity.this));
+                        recycler_view_sticker.setAdapter(new StickerAdapter(PhotoEditorActivity.this.getApplicationContext(), StickerFileAsset.emojiList(), position, PhotoEditorActivity.this));
                         break;
                     case 7:
-                        recycler_view_sticker.setAdapter(new StickerAdapter(PhotoEditorActivity.this.getApplicationContext(), StickerFileAsset.fruitList(), i, PhotoEditorActivity.this));
+                        recycler_view_sticker.setAdapter(new StickerAdapter(PhotoEditorActivity.this.getApplicationContext(), StickerFileAsset.fruitList(), position, PhotoEditorActivity.this));
                         break;
                     case 8:
-                        recycler_view_sticker.setAdapter(new StickerAdapter(PhotoEditorActivity.this.getApplicationContext(), StickerFileAsset.heartList(), i, PhotoEditorActivity.this));
+                        recycler_view_sticker.setAdapter(new StickerAdapter(PhotoEditorActivity.this.getApplicationContext(), StickerFileAsset.heartList(), position, PhotoEditorActivity.this));
                         break;
                     case 9:
-                        recycler_view_sticker.setAdapter(new StickerAdapter(PhotoEditorActivity.this.getApplicationContext(), StickerFileAsset.lovedayList(), i, PhotoEditorActivity.this));
+                        recycler_view_sticker.setAdapter(new StickerAdapter(PhotoEditorActivity.this.getApplicationContext(), StickerFileAsset.lovedayList(), position, PhotoEditorActivity.this));
                         break;
                     case 10:
-                        recycler_view_sticker.setAdapter(new StickerAdapter(PhotoEditorActivity.this.getApplicationContext(), StickerFileAsset.plantList(), i, PhotoEditorActivity.this));
+                        recycler_view_sticker.setAdapter(new StickerAdapter(PhotoEditorActivity.this.getApplicationContext(), StickerFileAsset.plantList(), position, PhotoEditorActivity.this));
                         break;
                     case 11:
-                        recycler_view_sticker.setAdapter(new StickerAdapter(PhotoEditorActivity.this.getApplicationContext(), StickerFileAsset.stickerList(), i, PhotoEditorActivity.this));
+                        recycler_view_sticker.setAdapter(new StickerAdapter(PhotoEditorActivity.this.getApplicationContext(), StickerFileAsset.stickerList(), position, PhotoEditorActivity.this));
                         break;
                     case 12:
-                        recycler_view_sticker.setAdapter(new StickerAdapter(PhotoEditorActivity.this.getApplicationContext(), StickerFileAsset.sweetList(), i, PhotoEditorActivity.this));
+                        recycler_view_sticker.setAdapter(new StickerAdapter(PhotoEditorActivity.this.getApplicationContext(), StickerFileAsset.sweetList(), position, PhotoEditorActivity.this));
                         break;
                     case 13:
-                        recycler_view_sticker.setAdapter(new StickerAdapter(PhotoEditorActivity.this.getApplicationContext(), StickerFileAsset.textcolorList(), i, PhotoEditorActivity.this));
+                        recycler_view_sticker.setAdapter(new StickerAdapter(PhotoEditorActivity.this.getApplicationContext(), StickerFileAsset.textcolorList(), position, PhotoEditorActivity.this));
                         break;
                     case 14:
-                        recycler_view_sticker.setAdapter(new StickerAdapter(PhotoEditorActivity.this.getApplicationContext(), StickerFileAsset.textneonList(), i, PhotoEditorActivity.this));
+                        recycler_view_sticker.setAdapter(new StickerAdapter(PhotoEditorActivity.this.getApplicationContext(), StickerFileAsset.textneonList(), position, PhotoEditorActivity.this));
                         break;
                 }
 
@@ -955,7 +955,7 @@ public class PhotoEditorActivity extends BaseActivity implements OnPhotoEditorLi
         public Void doInBackground(Void... voidArr) {
             PhotoEditorActivity.this.lstBitmapWithFilter.clear();
             PhotoEditorActivity.this.lstBitmapWithFilter.addAll(FilterFileAsset.getListBitmapFilter(ThumbnailUtils.extractThumbnail(PhotoEditorActivity.this.photo_editor_view.getCurrentBitmap(), 100, 100)));
-            Log.d("XXXXXXXX", "LoadFilterBitmap " + PhotoEditorActivity.this.lstBitmapWithFilter.size());
+            Log.d(TAG, "LoadFilterBitmap " + PhotoEditorActivity.this.lstBitmapWithFilter.size());
             return null;
         }
 
@@ -1027,8 +1027,8 @@ public class PhotoEditorActivity extends BaseActivity implements OnPhotoEditorLi
     class ShowSplashFragment extends AsyncTask<Void, List<Bitmap>, List<Bitmap>> {
         boolean isSplashSquared;
 
-        public ShowSplashFragment(boolean z) {
-            this.isSplashSquared = z;
+        public ShowSplashFragment(boolean isSplashSquared) {
+            this.isSplashSquared = isSplashSquared;
         }
 
         public void onPreExecute() {
