@@ -15,6 +15,11 @@ dependencyResolutionManagement {
         maven {
             url 'https://dl.bintray.com/tzutalin/maven'
         }
+        maven {
+            // Use github hosted maven repo for now.
+            // Will be uploaded to maven central later.
+            url 'https://maven.wysaid.org/'
+        }
     }
 }
 rootProject.name = "Pixel Perfect"
