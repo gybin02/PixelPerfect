@@ -21,9 +21,9 @@ import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+
 import com.example.pixelperfect.Sticker.Sticker;
 import com.example.pixelperfect.Utils.SystemUtil;
-
 
 
 public class PTextView extends Sticker {
@@ -165,7 +165,7 @@ public class PTextView extends Sticker {
             return this;
         }
         if (this.textShadow != null) {
-            this.textPaint.setShadowLayer((float) this.textShadow.getRadius(), (float) this.textShadow.getDx(), (float) this.textShadow.getDy(), this.textShadow.getColorShadow());
+            this.textPaint.setShadowLayer((float) this.textShadow.radius, (float) this.textShadow.getDx(), (float) this.textShadow.getDy(), this.textShadow.getColorShadow());
         }
         this.textPaint.setTextAlign(Paint.Align.LEFT);
         this.textPaint.setARGB(this.textAlpha, Color.red(this.textColor), Color.green(this.textColor), Color.blue(this.textColor));

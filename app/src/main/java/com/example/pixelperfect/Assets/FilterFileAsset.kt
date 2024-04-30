@@ -111,6 +111,9 @@ object FilterFileAsset {
         FiltersCode("@adjust shadowhighlight -200 200")
     )
 
+    /**
+     * 获取做完滤镜的效果图片
+     */
     @JvmStatic
     fun getListBitmapFilter(bitmap: Bitmap?): List<Bitmap?> {
         val arrayList = mutableListOf<Bitmap?>()
@@ -128,13 +131,18 @@ object FilterFileAsset {
         return arrayList
     }
 
+    /**
+     * 获取虚化图片
+     * @param bitmap 图片
+     * @param progress 虚化进度 0-100f
+     */
     @JvmStatic
-    fun getBlurImageFromBitmap(bitmap: Bitmap?, f: Float): Bitmap {
+    fun getBlurImageFromBitmap(bitmap: Bitmap?, progress: Float): Bitmap {
         val create = SharedContext.create()
         create.makeCurrent()
         val cGEImageHandler = CGEImageHandler()
         cGEImageHandler.initWithBitmap(bitmap)
-        cGEImageHandler.setFilterWithConfig(MessageFormat.format("@blur lerp {0}", *arrayOf<Any>((f / 10.0f).toString() + "")))
+        cGEImageHandler.setFilterWithConfig(MessageFormat.format("@blur lerp {0}", *arrayOf<Any>((progress / 10.0f).toString() + "")))
         cGEImageHandler.processFilters()
         val resultBitmap = cGEImageHandler.resultBitmap
         create.release()

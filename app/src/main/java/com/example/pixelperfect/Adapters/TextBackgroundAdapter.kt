@@ -19,7 +19,7 @@ class TextBackgroundAdapter(private val context: Context, var backgroundColorLis
     var squareViewList: MutableList<SquareView?> = mutableListOf()
 
     interface BackgroundColorListener {
-        fun onBackgroundColorSelected(i: Int, squareView: SquareView?)
+        fun onBackgroundColorSelected(position: Int, squareView: SquareView?)
     }
 
     init {

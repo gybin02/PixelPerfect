@@ -380,7 +380,7 @@ public class PhotoEditorActivity extends BaseActivity implements OnPhotoEditorLi
                 if (sticker instanceof PTextView) {
                     sticker.setShow(false);
                     photo_editor_view.setHandlingSticker((Sticker) null);
-                    textEditorDialogFragment = TextFragment.show(PhotoEditorActivity.this, ((PTextView) sticker).getPolishText());
+                    textEditorDialogFragment = TextFragment.showFragment(PhotoEditorActivity.this, ((PTextView) sticker).getPolishText());
                     textEditor = new TextFragment.TextEditor() {
                         public void onDone(Text polishText) {
                             photo_editor_view.getStickers().remove(photo_editor_view.getLastHandlingSticker());
@@ -616,7 +616,7 @@ public class PhotoEditorActivity extends BaseActivity implements OnPhotoEditorLi
     }
 
     public void openTextFragment() {
-        this.textEditorDialogFragment = TextFragment.show(this);
+        this.textEditorDialogFragment = TextFragment.showFragment(this,null);
         this.textEditor = new TextFragment.TextEditor() {
             public void onDone(Text polishText) {
                 photo_editor_view.addSticker(new PTextView(getApplicationContext(), polishText));
@@ -1003,7 +1003,7 @@ public class PhotoEditorActivity extends BaseActivity implements OnPhotoEditorLi
 
         public void onPostExecute(List<Bitmap> list) {
             if (this.isSplashSquared) {
-                SquareFragment.show(PhotoEditorActivity.this, list.get(0), null, list.get(1), PhotoEditorActivity.this, true);
+                SquareFragment.show(PhotoEditorActivity.this, list.get(0), list.get(1), PhotoEditorActivity.this, true);
             }
             PhotoEditorActivity.this.mLoading(false);
         }

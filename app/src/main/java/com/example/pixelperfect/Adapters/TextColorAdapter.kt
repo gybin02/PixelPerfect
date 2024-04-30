@@ -17,7 +17,7 @@ class TextColorAdapter(private val context: Context, var colorListener: ColorLis
     var squareViewList: MutableList<SquareView?> = mutableListOf()
 
     interface ColorListener {
-        fun onColorSelected(i: Int, squareView: SquareView?)
+        fun onColorSelected(position: Int, squareView: SquareView?)
     }
 
     init {
