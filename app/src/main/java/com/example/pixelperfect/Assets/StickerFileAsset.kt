@@ -537,7 +537,7 @@ object StickerFileAsset {
             null
         }
     }
-
+    @JvmStatic
     //创建列表集合
     val stickRepo = listOf(
         amojiList(),

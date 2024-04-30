@@ -11,7 +11,13 @@ import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 
 public class SplashSticker extends Sticker {
+    /**
+     * 覆盖的图片
+     */
     private Bitmap bitmapOver;
+    /**
+     * 混合的图片
+     */
     private Bitmap bitmapXor;
     private Paint over;
     private Paint xor = new Paint();

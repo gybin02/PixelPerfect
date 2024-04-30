@@ -228,11 +228,11 @@ public class TextFragment extends DialogFragment implements View.OnClickListener
         this.inputMethodManager.toggleSoftInput(2, 0);
         this.recycler_view_fonts.setLayoutManager(new GridLayoutManager(getContext(), 5));
         this.fontAdapter = new FontAdapter(getContext(), FontFileAsset.getListFonts());
-        this.fontAdapter.setClickListener(this);
+        this.fontAdapter.setMClickListener(this);
         this.recycler_view_fonts.setAdapter(this.fontAdapter);
         this.recycler_view_shadow.setLayoutManager(new GridLayoutManager(getContext(), 5));
         this.shadowAdapter = new ShadowAdapter(getContext(), Text.getLstTextShadow());
-        this.shadowAdapter.setClickListener(this);
+        this.shadowAdapter.setMClickListener(this);
         this.recycler_view_shadow.setAdapter(this.shadowAdapter);
 
         this.textColorOpacity.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {

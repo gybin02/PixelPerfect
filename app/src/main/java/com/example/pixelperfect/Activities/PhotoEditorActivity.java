@@ -442,53 +442,8 @@ public class PhotoEditorActivity extends BaseActivity implements OnPhotoEditorLi
                 RecyclerView recycler_view_sticker = inflate.findViewById(R.id.recycler_view_sticker);
                 recycler_view_sticker.setHasFixedSize(true);
                 recycler_view_sticker.setLayoutManager(new GridLayoutManager(PhotoEditorActivity.this.getApplicationContext(), 6));
-                switch (position) {
-                    case 0:
-                        recycler_view_sticker.setAdapter(new StickerAdapter(PhotoEditorActivity.this.getApplicationContext(), StickerFileAsset.amojiList(), position, PhotoEditorActivity.this));
-                        break;
-                    case 1:
-                        recycler_view_sticker.setAdapter(new StickerAdapter(PhotoEditorActivity.this.getApplicationContext(), StickerFileAsset.chickenList(), position, PhotoEditorActivity.this));
-                        break;
-                    case 2:
-                        recycler_view_sticker.setAdapter(new StickerAdapter(PhotoEditorActivity.this.getApplicationContext(), StickerFileAsset.childList(), position, PhotoEditorActivity.this));
-                        break;
-                    case 3:
-                        recycler_view_sticker.setAdapter(new StickerAdapter(PhotoEditorActivity.this.getApplicationContext(), StickerFileAsset.christmasList(), position, PhotoEditorActivity.this));
-                        break;
-                    case 4:
-                        recycler_view_sticker.setAdapter(new StickerAdapter(PhotoEditorActivity.this.getApplicationContext(), StickerFileAsset.cuteList(), position, PhotoEditorActivity.this));
-                        break;
-                    case 5:
-                        recycler_view_sticker.setAdapter(new StickerAdapter(PhotoEditorActivity.this.getApplicationContext(), StickerFileAsset.emojList(), position, PhotoEditorActivity.this));
-                        break;
-                    case 6:
-                        recycler_view_sticker.setAdapter(new StickerAdapter(PhotoEditorActivity.this.getApplicationContext(), StickerFileAsset.emojiList(), position, PhotoEditorActivity.this));
-                        break;
-                    case 7:
-                        recycler_view_sticker.setAdapter(new StickerAdapter(PhotoEditorActivity.this.getApplicationContext(), StickerFileAsset.fruitList(), position, PhotoEditorActivity.this));
-                        break;
-                    case 8:
-                        recycler_view_sticker.setAdapter(new StickerAdapter(PhotoEditorActivity.this.getApplicationContext(), StickerFileAsset.heartList(), position, PhotoEditorActivity.this));
-                        break;
-                    case 9:
-                        recycler_view_sticker.setAdapter(new StickerAdapter(PhotoEditorActivity.this.getApplicationContext(), StickerFileAsset.lovedayList(), position, PhotoEditorActivity.this));
-                        break;
-                    case 10:
-                        recycler_view_sticker.setAdapter(new StickerAdapter(PhotoEditorActivity.this.getApplicationContext(), StickerFileAsset.plantList(), position, PhotoEditorActivity.this));
-                        break;
-                    case 11:
-                        recycler_view_sticker.setAdapter(new StickerAdapter(PhotoEditorActivity.this.getApplicationContext(), StickerFileAsset.stickerList(), position, PhotoEditorActivity.this));
-                        break;
-                    case 12:
-                        recycler_view_sticker.setAdapter(new StickerAdapter(PhotoEditorActivity.this.getApplicationContext(), StickerFileAsset.sweetList(), position, PhotoEditorActivity.this));
-                        break;
-                    case 13:
-                        recycler_view_sticker.setAdapter(new StickerAdapter(PhotoEditorActivity.this.getApplicationContext(), StickerFileAsset.textcolorList(), position, PhotoEditorActivity.this));
-                        break;
-                    case 14:
-                        recycler_view_sticker.setAdapter(new StickerAdapter(PhotoEditorActivity.this.getApplicationContext(), StickerFileAsset.textneonList(), position, PhotoEditorActivity.this));
-                        break;
-                }
+                List<String> stickerList = StickerFileAsset.getStickRepo().get(position);
+                recycler_view_sticker.setAdapter(new StickerAdapter(PhotoEditorActivity.this.getApplicationContext(), stickerList, position, PhotoEditorActivity.this));
 
                 viewGroup.addView(inflate);
                 return inflate;

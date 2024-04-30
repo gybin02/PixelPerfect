@@ -1,72 +1,49 @@
-package com.example.pixelperfect.Adapters;
+package com.example.pixelperfect.Adapters
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.content.Context
+import android.graphics.Bitmap
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.example.pixelperfect.Assets.StickerFileAsset.loadBitmapFromAssets
+import com.example.pixelperfect.R
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.bumptech.glide.Glide;
-import com.example.pixelperfect.Assets.StickerFileAsset;
-import com.example.pixelperfect.R;
-
-import java.util.List;
 /**
  * 贴纸数据源
  * 或者类似自己创建Json
  * https://www.flaticon.com/stickers-pack/birthday-209
  */
-public class StickerAdapter extends RecyclerView.Adapter<StickerAdapter.ViewHolder> {
-
-    public Context context;
-
-    public int screenWidth;
-
-    public OnClickStickerListener stickerListener;
-
-    public List<String> stickers;
-
-    public interface OnClickStickerListener {
-        void addSticker(int i, Bitmap bitmap);
+class StickerAdapter(var context: Context, var stickers: List<String>, var screenWidth: Int, var stickerListener: OnClickStickerListener) : RecyclerView.Adapter<StickerAdapter.ViewHolder>() {
+    interface OnClickStickerListener {
+        fun addSticker(i: Int, bitmap: Bitmap?)
     }
 
-    public StickerAdapter(Context context2, List<String> list, int screenWidth, OnClickStickerListener onClickStickerListener) {
-        this.context = context2;
-        this.stickers = list;
-        this.screenWidth = screenWidth;
-        this.stickerListener = onClickStickerListener;
+    override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): ViewHolder {
+        return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_sticker, viewGroup, false))
     }
 
-    @NonNull
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        return new ViewHolder(LayoutInflater.from(this.context).inflate(R.layout.item_sticker, viewGroup, false));
+    override fun onBindViewHolder(viewHolder: ViewHolder, i: Int) {
+        val bitmap = loadBitmapFromAssets(context, stickers[i])
+        Glide.with(context).load(bitmap).into(viewHolder.sticker)
     }
 
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        Bitmap bitmap = StickerFileAsset.loadBitmapFromAssets(this.context, this.stickers.get(i));
-        Glide.with(context).load(bitmap).into(viewHolder.sticker);
+    override fun getItemCount(): Int {
+        return stickers.size
     }
 
-    public int getItemCount() {
-        return this.stickers.size();
-    }
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
+        var sticker: ImageView
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public ImageView sticker;
-
-        public ViewHolder(View view) {
-            super(view);
-            this.sticker = view.findViewById(R.id.image_view_item_sticker);
-
-            view.setOnClickListener(this);
+        init {
+            sticker = view.findViewById(R.id.image_view_item_sticker)
+            view.setOnClickListener(this)
         }
 
-        public void onClick(View view) {
-            StickerAdapter.this.stickerListener.addSticker(getAdapterPosition(),StickerFileAsset.loadBitmapFromAssets(StickerAdapter.this.context, (String) StickerAdapter.this.stickers.get(getAdapterPosition())));
+        override fun onClick(view: View) {
+            stickerListener.addSticker(adapterPosition, loadBitmapFromAssets(context, stickers[adapterPosition]))
         }
     }
 }

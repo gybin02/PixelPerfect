@@ -36,7 +36,7 @@ import com.example.pixelperfect.Utils.SystemUtil;
 import com.steelkiwi.cropiwa.AspectRatio;
 
 public class RatioFragment extends DialogFragment implements AspectAdapter.OnNewSelectedListener,
-        GradientRatioAdapter.BackgroundInstaListener, ColorRatioAdapter.BackgroundColorListener, BorderRatioAdapter.BackgroundBorderListener {
+        GradientRatioAdapter.BackgroundListener, ColorRatioAdapter.BackgroundColorListener, BorderRatioAdapter.BackgroundBorderListener {
     private static final String TAG = "RatioFragment";
     private RelativeLayout relative_layout_loading;
     private Bitmap bitmap;
@@ -94,7 +94,7 @@ public class RatioFragment extends DialogFragment implements AspectAdapter.OnNew
         getDialog().getWindow().requestFeature(1);
         getDialog().getWindow().setFlags(1024, 1024);
         View inflate = layoutInflater.inflate(R.layout.fragment_ratio, viewGroup, false);
-        AspectAdapter aspectRatioPreviewAdapter = new AspectAdapter(true);
+        AspectAdapter aspectRatioPreviewAdapter = new AspectAdapter();
         aspectRatioPreviewAdapter.setListener(this);
         this.relative_layout_loading = inflate.findViewById(R.id.relative_layout_loading);
         this.relative_layout_loading.setVisibility(View.GONE);
