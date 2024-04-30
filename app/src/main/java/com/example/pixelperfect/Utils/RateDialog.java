@@ -3,6 +3,7 @@ package com.example.pixelperfect.Utils;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,11 +12,16 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
+
 import com.airbnb.lottie.LottieAnimationView;
 import com.example.pixelperfect.BuildConfig;
 import com.example.pixelperfect.R;
 
+/**
+ * 评分弹窗
+ */
 public class RateDialog extends Dialog implements View.OnClickListener {
     private final Activity activity;
     private final boolean exit;
@@ -28,14 +34,14 @@ public class RateDialog extends Dialog implements View.OnClickListener {
     private TextView textViewDesc;
     private LottieAnimationView lottie_animation_view;
 
-    public RateDialog(@NonNull Activity activity, boolean z) {
+    public RateDialog(@NonNull Activity activity, boolean exit) {
         super(activity);
         this.activity = activity;
-        this.exit = z;
+        this.exit = exit;
     }
 
     @Override
-    protected void onCreate(Bundle bundle){
+    protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setContentView(R.layout.dialog_rate);
         this.star_number = 0;
@@ -62,11 +68,16 @@ public class RateDialog extends Dialog implements View.OnClickListener {
         this.imageViewStars[2] = image_view_star_3;
         this.imageViewStars[3] = image_view_star_4;
         this.imageViewStars[4] = image_view_star_5;
-        getWindow().setLayout(-1, -2);
+        // 设置对话框的宽度和高度为自适应
+        getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        // 禁用点击对话框外部区域取消对话框的功能
         setCanceledOnTouchOutside(false);
+        // 禁用按下返回键取消对话框的功能
         setCancelable(false);
-        getWindow().setBackgroundDrawable(new ColorDrawable(0));
-        textViewLater.setOnClickListener((v)->{
+        // 设置对话框的背景为透明
+        getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        textViewLater.setOnClickListener((v) -> {
             dismiss();
         });
     }

@@ -39,15 +39,19 @@ public abstract class Sticker {
     public boolean contains(float paramFloat1, float paramFloat2) {
         return contains(new float[]{paramFloat1, paramFloat2});
     }
-
-    public boolean contains(@NonNull float[] paramArrayOffloat) {
+    /**
+     * 检查指定点是否在贴纸范围内。
+     */
+    public boolean contains(@NonNull float[] point) {
         Matrix matrix = new Matrix();
         matrix.setRotate(-getCurrentAngle());
         getBoundPoints(this.boundPoints);
         getMappedPoints(this.mappedBounds, this.boundPoints);
         matrix.mapPoints(this.unrotatedWrapperCorner, this.mappedBounds);
-        matrix.mapPoints(this.unrotatedPoint, paramArrayOffloat);
+        matrix.mapPoints(this.unrotatedPoint, point);
+        // 将点限制在矩形范围内
         StickerUtils.trapToRect(this.trappedRect, this.unrotatedWrapperCorner);
+        // 检查指定点是否在矩形范围内
         return this.trappedRect.contains(this.unrotatedPoint[0], this.unrotatedPoint[1]);
     }
 
@@ -62,52 +66,52 @@ public abstract class Sticker {
         return rectF;
     }
 
-    public void getBound(@NonNull RectF paramRectF) {
-        paramRectF.set(0.0F, 0.0F, getWidth(), getHeight());
+    public void getBound(@NonNull RectF rectF) {
+        rectF.set(0.0F, 0.0F, getWidth(), getHeight());
     }
 
-    public void getBoundPoints(@NonNull float[] paramArrayOffloat) {
+    public void getBoundPoints(@NonNull float[] boundPoints) {
         if (!this.isFlippedHorizontally) {
             if (!this.isFlippedVertically) {
-                paramArrayOffloat[0] = 0.0F;
-                paramArrayOffloat[1] = 0.0F;
-                paramArrayOffloat[2] = getWidth();
-                paramArrayOffloat[3] = 0.0F;
-                paramArrayOffloat[4] = 0.0F;
-                paramArrayOffloat[5] = getHeight();
-                paramArrayOffloat[6] = getWidth();
-                paramArrayOffloat[7] = getHeight();
+                boundPoints[0] = 0.0F;
+                boundPoints[1] = 0.0F;//topLeft
+                boundPoints[2] = getWidth(); //topRight
+                boundPoints[3] = 0.0F;
+                boundPoints[4] = 0.0F;//bottomLeft
+                boundPoints[5] = getHeight();
+                boundPoints[6] = getWidth();//bottomRight
+                boundPoints[7] = getHeight();
                 return;
             }
-            paramArrayOffloat[0] = 0.0F;
-            paramArrayOffloat[1] = getHeight();
-            paramArrayOffloat[2] = getWidth();
-            paramArrayOffloat[3] = getHeight();
-            paramArrayOffloat[4] = 0.0F;
-            paramArrayOffloat[5] = 0.0F;
-            paramArrayOffloat[6] = getWidth();
-            paramArrayOffloat[7] = 0.0F;
+            boundPoints[0] = 0.0F;
+            boundPoints[1] = getHeight();
+            boundPoints[2] = getWidth();
+            boundPoints[3] = getHeight();
+            boundPoints[4] = 0.0F;
+            boundPoints[5] = 0.0F;
+            boundPoints[6] = getWidth();
+            boundPoints[7] = 0.0F;
             return;
         }
         if (!this.isFlippedVertically) {
-            paramArrayOffloat[0] = getWidth();
-            paramArrayOffloat[1] = 0.0F;
-            paramArrayOffloat[2] = 0.0F;
-            paramArrayOffloat[3] = 0.0F;
-            paramArrayOffloat[4] = getWidth();
-            paramArrayOffloat[5] = getHeight();
-            paramArrayOffloat[6] = 0.0F;
-            paramArrayOffloat[7] = getHeight();
+            boundPoints[0] = getWidth();
+            boundPoints[1] = 0.0F;
+            boundPoints[2] = 0.0F;
+            boundPoints[3] = 0.0F;
+            boundPoints[4] = getWidth();
+            boundPoints[5] = getHeight();
+            boundPoints[6] = 0.0F;
+            boundPoints[7] = getHeight();
             return;
         }
-        paramArrayOffloat[0] = getWidth();
-        paramArrayOffloat[1] = getHeight();
-        paramArrayOffloat[2] = 0.0F;
-        paramArrayOffloat[3] = getHeight();
-        paramArrayOffloat[4] = getWidth();
-        paramArrayOffloat[5] = 0.0F;
-        paramArrayOffloat[6] = 0.0F;
-        paramArrayOffloat[7] = 0.0F;
+        boundPoints[0] = getWidth();
+        boundPoints[1] = getHeight();
+        boundPoints[2] = 0.0F;
+        boundPoints[3] = getHeight();
+        boundPoints[4] = getWidth();
+        boundPoints[5] = 0.0F;
+        boundPoints[6] = 0.0F;
+        boundPoints[7] = 0.0F;
     }
 
     public float[] getBoundPoints() {
@@ -144,8 +148,14 @@ public abstract class Sticker {
         return rectF;
     }
 
-    public void getMappedBound(@NonNull RectF paramRectF1, @NonNull RectF paramRectF2) {
-        this.matrix.mapRect(paramRectF1, paramRectF2);
+    /**
+     * 将给定的边界矩形映射到变换后的边界矩形。
+     *
+     * @param mappedBound 变换后的边界矩形
+     * @param originalBound 原始边界矩形
+     */
+    public void getMappedBound(@NonNull RectF mappedBound, @NonNull RectF originalBound) {
+        this.matrix.mapRect(mappedBound, originalBound);
     }
 
 
@@ -156,12 +166,26 @@ public abstract class Sticker {
         return pointF;
     }
 
-    public void getMappedCenterPoint(@NonNull PointF pointF, @NonNull float[] mappedBounds, @NonNull float[] boundPoints) {
-        getCenterPoint(pointF);
-        boundPoints[0] = pointF.x;
-        boundPoints[1] = pointF.y;
+    /**
+     * 将给定点的中心点映射到变换后的位置。
+     *
+     * @param centerPoint  给定点的中心点
+     * @param mappedBounds 映射后的边界点数组
+     * @param boundPoints  原始边界点数组
+     */
+    public void getMappedCenterPoint(@NonNull PointF centerPoint, @NonNull float[] mappedBounds, @NonNull float[] boundPoints) {
+        // 获取给定点的中心点
+        getCenterPoint(centerPoint);
+
+        // 将中心点的坐标放入原始边界点数组
+        boundPoints[0] = centerPoint.x;
+        boundPoints[1] = centerPoint.y;
+
+        // 将原始边界点数组映射到变换后的位置
         getMappedPoints(mappedBounds, boundPoints);
-        pointF.set(mappedBounds[0], mappedBounds[1]);
+
+        // 更新中心点的坐标为映射后的位置
+        centerPoint.set(mappedBounds[0], mappedBounds[1]);
     }
 
     public void getMappedPoints(@NonNull float[] dstPoint, @NonNull float[] srcPoint) {

@@ -3,7 +3,9 @@ package com.example.pixelperfect.Assets
 import android.content.Context
 import android.graphics.Typeface
 import android.widget.TextView
-
+/**
+ * 字体数据
+ */
 object FontFileAsset {
     @JvmStatic
     fun setFontByName(context: Context, textView: TextView, name: String) {

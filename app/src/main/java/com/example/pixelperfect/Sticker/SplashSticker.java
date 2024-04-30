@@ -16,7 +16,7 @@ public class SplashSticker extends Sticker {
     private Paint over;
     private Paint xor = new Paint();
 
-    public SplashSticker(Bitmap paramBitmap1, Bitmap paramBitmap2) {
+    public SplashSticker(Bitmap bitmapXor, Bitmap bitmapOver) {
         this.xor.setDither(true);
         this.xor.setAntiAlias(true);
         this.xor.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.XOR));
@@ -24,8 +24,8 @@ public class SplashSticker extends Sticker {
         this.over.setDither(true);
         this.over.setAntiAlias(true);
         this.over.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OVER));
-        this.bitmapXor = paramBitmap1;
-        this.bitmapOver = paramBitmap2;
+        this.bitmapXor = bitmapXor;
+        this.bitmapOver = bitmapOver;
     }
 
     private Bitmap getBitmapOver() {
@@ -36,9 +36,9 @@ public class SplashSticker extends Sticker {
         return this.bitmapXor;
     }
 
-    public void draw(@NonNull Canvas paramCanvas) {
-        paramCanvas.drawBitmap(getBitmapXor(), getMatrix(), this.xor);
-        paramCanvas.drawBitmap(getBitmapOver(), getMatrix(), this.over);
+    public void draw(@NonNull Canvas canvas) {
+        canvas.drawBitmap(getBitmapXor(), getMatrix(), this.xor);
+        canvas.drawBitmap(getBitmapOver(), getMatrix(), this.over);
     }
 
     public int getAlpha() {

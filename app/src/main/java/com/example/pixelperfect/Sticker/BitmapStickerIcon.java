@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.view.MotionEvent;
+
 import com.example.pixelperfect.Event.StickerIconEvent;
 
 /**
@@ -36,15 +37,15 @@ public class BitmapStickerIcon extends DrawableSticker implements StickerIconEve
 
     private float y;
 
-    public BitmapStickerIcon(Drawable paramDrawable, int paramInt, String paramString) {
-        super(paramDrawable);
-        this.position = paramInt;
-        this.tag = paramString;
+    public BitmapStickerIcon(Drawable drawable, int position, String tag) {
+        super(drawable);
+        this.position = position;
+        this.tag = tag;
     }
 
-    public void draw(Canvas paramCanvas, Paint paramPaint) {
-        paramCanvas.drawCircle(this.x, this.y, this.iconRadius, paramPaint);
-        draw(paramCanvas);
+    public void draw(Canvas canvas, Paint paint) {
+        canvas.drawCircle(this.x, this.y, this.iconRadius, paint);
+        draw(canvas);
     }
 
     public float getIconRadius() {
@@ -67,36 +68,36 @@ public class BitmapStickerIcon extends DrawableSticker implements StickerIconEve
         return this.y;
     }
 
-    public void onActionDown(StickerView paramStickerView, MotionEvent paramMotionEvent) {
+    public void onActionDown(StickerView stickerView, MotionEvent motionEvent) {
         if (this.iconEvent != null)
-            this.iconEvent.onActionDown(paramStickerView, paramMotionEvent);
+            this.iconEvent.onActionDown(stickerView, motionEvent);
     }
 
-    public void onActionMove(StickerView paramStickerView, MotionEvent paramMotionEvent) {
+    public void onActionMove(StickerView stickerView, MotionEvent motionEvent) {
         if (this.iconEvent != null)
-            this.iconEvent.onActionMove(paramStickerView, paramMotionEvent);
+            this.iconEvent.onActionMove(stickerView, motionEvent);
     }
 
-    public void onActionUp(StickerView paramStickerView, MotionEvent paramMotionEvent) {
+    public void onActionUp(StickerView stickerView, MotionEvent motionEvent) {
         if (this.iconEvent != null)
-            this.iconEvent.onActionUp(paramStickerView, paramMotionEvent);
+            this.iconEvent.onActionUp(stickerView, motionEvent);
     }
 
-    public void setIconEvent(StickerIconEvent paramStickerIconEvent) {
-        this.iconEvent = paramStickerIconEvent;
+    public void setIconEvent(StickerIconEvent iconEvent) {
+        this.iconEvent = iconEvent;
     }
 
 
-    public void setTag(String paramString) {
-        this.tag = paramString;
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 
-    public void setX(float paramFloat) {
-        this.x = paramFloat;
+    public void setX(float x) {
+        this.x = x;
     }
 
-    public void setY(float paramFloat) {
-        this.y = paramFloat;
+    public void setY(float y) {
+        this.y = y;
     }
 
 }

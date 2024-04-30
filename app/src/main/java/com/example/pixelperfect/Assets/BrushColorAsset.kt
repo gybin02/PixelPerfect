@@ -1,5 +1,8 @@
 package com.example.pixelperfect.Assets
 
+/**
+ * 笔刷颜色
+ */
 object BrushColorAsset {
     @JvmStatic
     fun listColorBrush(): List<String> {

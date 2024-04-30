@@ -56,6 +56,9 @@ public class StickerView extends RelativeLayout {
     private boolean constrained;
     private final PointF currentCenterPoint;
     private BitmapStickerIcon currentIcon;
+    /**
+     * @see ActionMode
+     */
     private int currentMode;
     private float currentMoveingX;
     private float currentMoveingY;
@@ -157,7 +160,7 @@ public class StickerView extends RelativeLayout {
         this.onMoving = false;
         this.oldDistance = 0.0f;
         this.oldRotation = 0.0f;
-        this.currentMode = 0;
+        this.currentMode = ActionMode.NONE;
         this.lastClickTime = 0;
         this.minClickDelayTime = 200;
         this.paintCircle = new Paint();
@@ -222,7 +225,7 @@ public class StickerView extends RelativeLayout {
         this.onMoving = false;
         this.oldDistance = 0.0f;
         this.oldRotation = 0.0f;
-        this.currentMode = 0;
+        this.currentMode =ActionMode.NONE;
         this.lastClickTime = 0;
         this.minClickDelayTime = 200;
     }
@@ -449,51 +452,62 @@ public class StickerView extends RelativeLayout {
         this.onMoving = false;
     }
 
+    /**
+     * 处理触摸事件。
+     *
+     * @param motionEvent 触摸事件对象
+     * @return 是否消耗事件
+     */
     public boolean onTouchEvent(MotionEvent motionEvent) {
-        if (this.locked) {
+        if (locked) {
             return super.onTouchEvent(motionEvent);
         }
+
         switch (MotionEventCompat.getActionMasked(motionEvent)) {
-            case 0:
+            case MotionEvent.ACTION_DOWN:
                 if (!onTouchDown(motionEvent)) {
-                    if (this.onStickerOperationListener == null) {
-                        return false;
-                    }
-                    this.onStickerOperationListener.onStickerTouchOutside();
-                    invalidate();
-                    if (!this.drawCirclePoint) {
-                        return false;
+                    if (onStickerOperationListener != null) {
+                        onStickerOperationListener.onStickerTouchOutside();
+                        invalidate();
+                        if (!drawCirclePoint) {
+                            return false;
+                        }
                     }
                 }
                 break;
-            case 1:
+
+            case MotionEvent.ACTION_UP:
                 onTouchUp(motionEvent);
                 break;
-            case 2:
+
+            case MotionEvent.ACTION_MOVE:
                 handleCurrentMode(motionEvent);
                 invalidate();
                 break;
-            case 5:
-                this.oldDistance = calculateDistance(motionEvent);
-                this.oldRotation = calculateRotation(motionEvent);
-                this.midPoint = calculateMidPoint(motionEvent);
-                if (this.handlingSticker != null && isInStickerArea(this.handlingSticker, motionEvent.getX(1), motionEvent.getY(1)) && findCurrentIconTouched() == null) {
-                    this.currentMode = 2;
-                    break;
+
+            case MotionEvent.ACTION_POINTER_DOWN:
+                oldDistance = calculateDistance(motionEvent);
+                oldRotation = calculateRotation(motionEvent);
+                midPoint = calculateMidPoint(motionEvent);
+                if (handlingSticker != null && isInStickerArea(handlingSticker, motionEvent.getX(1), motionEvent.getY(1)) && findCurrentIconTouched() == null) {
+                    currentMode = ActionMode.ZOOM_WITH_TWO_FINGER;
                 }
-            case 6:
-                if (!(this.currentMode != 2 || this.handlingSticker == null || this.onStickerOperationListener == null)) {
-                    this.onStickerOperationListener.onStickerZoomFinished(this.handlingSticker);
+                break;
+
+            case MotionEvent.ACTION_POINTER_UP:
+                if (currentMode == ActionMode.ZOOM_WITH_TWO_FINGER && handlingSticker != null && onStickerOperationListener != null) {
+                    onStickerOperationListener.onStickerZoomFinished(handlingSticker);
                 }
-                this.currentMode = 0;
+                currentMode =ActionMode.NONE;
                 break;
         }
         return true;
     }
 
 
+
     public boolean onTouchDown(@NonNull MotionEvent motionEvent) {
-        this.currentMode = 1;
+        this.currentMode = ActionMode.DRAG;
         this.downX = motionEvent.getX();
         this.downY = motionEvent.getY();
         this.onMoving = true;
@@ -504,7 +518,7 @@ public class StickerView extends RelativeLayout {
         this.oldRotation = calculateRotation(this.midPoint.x, this.midPoint.y, this.downX, this.downY);
         this.currentIcon = findCurrentIconTouched();
         if (this.currentIcon != null) {
-            this.currentMode = 3;
+            this.currentMode = ActionMode.ICON;
             this.currentIcon.onActionDown(this, motionEvent);
         } else {
             this.handlingSticker = findHandlingSticker();
@@ -538,11 +552,11 @@ public class StickerView extends RelativeLayout {
         if (this.drawCirclePoint) {
             this.onStickerOperationListener.onTouchUpForBeauty(motionEvent.getX(), motionEvent.getY());
         }
-        if (!(this.currentMode != 3 || this.currentIcon == null || this.handlingSticker == null)) {
+        if (!(this.currentMode != ActionMode.ICON || this.currentIcon == null || this.handlingSticker == null)) {
             this.currentIcon.onActionUp(this, motionEvent);
         }
-        if (this.currentMode == 1 && Math.abs(motionEvent.getX() - this.downX) < ((float) this.touchSlop) && Math.abs(motionEvent.getY() - this.downY) < ((float) this.touchSlop) && this.handlingSticker != null) {
-            this.currentMode = 4;
+        if (this.currentMode == ActionMode.DRAG && Math.abs(motionEvent.getX() - this.downX) < ((float) this.touchSlop) && Math.abs(motionEvent.getY() - this.downY) < ((float) this.touchSlop) && this.handlingSticker != null) {
+            this.currentMode = ActionMode.CLICK;
             if (this.onStickerOperationListener != null) {
                 this.onStickerOperationListener.onStickerClicked(this.handlingSticker);
             }
@@ -550,10 +564,10 @@ public class StickerView extends RelativeLayout {
                 this.onStickerOperationListener.onStickerDoubleTapped(this.handlingSticker);
             }
         }
-        if (!(this.currentMode != 1 || this.handlingSticker == null || this.onStickerOperationListener == null)) {
+        if (!(this.currentMode != ActionMode.DRAG || this.handlingSticker == null || this.onStickerOperationListener == null)) {
             this.onStickerOperationListener.onStickerDragFinished(this.handlingSticker);
         }
-        this.currentMode = 0;
+        this.currentMode =ActionMode.NONE;
         this.lastClickTime = uptimeMillis;
     }
 
@@ -618,27 +632,45 @@ public class StickerView extends RelativeLayout {
         this.handlingSticker.setMatrix(this.moveMatrix);
     }
 
+    /**
+     * 缩放和旋转贴纸。
+     *
+     * @param sticker 要缩放和旋转的贴纸对象
+     * @param motionEvent 缩放和旋转操作的触摸事件
+     */
     public void zoomAndRotateSticker(@Nullable Sticker sticker, @NonNull MotionEvent motionEvent) {
-        float f;
         if (sticker != null) {
-            boolean z = sticker instanceof BeautySticker;
-            if (z) {
+            // 判断贴纸是否为 BeautySticker 类型，并且类型为 10 或 11，则不进行缩放和旋转操作
+            if (sticker instanceof BeautySticker) {
                 BeautySticker beautySticker = (BeautySticker) sticker;
                 if (beautySticker.getType() == 10 || beautySticker.getType() == 11) {
                     return;
                 }
             }
+
+            // 计算触摸事件和中心点之间的距离
+            float distance;
             if (sticker instanceof PTextView) {
-                f = this.oldDistance;
+                // 如果是 PTextView 贴纸，则使用保存的旧距离
+                distance = this.oldDistance;
             } else {
-                f = calculateDistance(this.midPoint.x, this.midPoint.y, motionEvent.getX(), motionEvent.getY());
+                // 否则，计算触摸事件和中心点之间的距离
+                distance = calculateDistance(this.midPoint.x, this.midPoint.y, motionEvent.getX(), motionEvent.getY());
             }
-            float calculateRotation = calculateRotation(this.midPoint.x, this.midPoint.y, motionEvent.getX(), motionEvent.getY());
+
+            // 计算旋转角度
+            float rotation = calculateRotation(this.midPoint.x, this.midPoint.y, motionEvent.getX(), motionEvent.getY());
+
+            // 设置移动矩阵
             this.moveMatrix.set(this.downMatrix);
-            this.moveMatrix.postScale(f / this.oldDistance, f / this.oldDistance, this.midPoint.x, this.midPoint.y);
-            if (!z) {
-                this.moveMatrix.postRotate(calculateRotation - this.oldRotation, this.midPoint.x, this.midPoint.y);
+            this.moveMatrix.postScale(distance / this.oldDistance, distance / this.oldDistance, this.midPoint.x, this.midPoint.y);
+
+            // 如果贴纸不是 BeautySticker 类型，则进行旋转操作
+            if (!(sticker instanceof BeautySticker)) {
+                this.moveMatrix.postRotate(rotation - this.oldRotation, this.midPoint.x, this.midPoint.y);
             }
+
+            // 设置贴纸的变换矩阵
             this.handlingSticker.setMatrix(this.moveMatrix);
         }
     }

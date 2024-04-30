@@ -22,11 +22,11 @@ public class MultiTouchListener implements OnTouchListener {
     public float maximumScale;
     public float minimumScale;
     private Rect rect;
-    OnRotateListner rotateListner;
-
-    public interface OnRotateListner {
-        float getRotation(float f);
-    }
+//    OnRotateListner rotateListner;
+//
+//    public interface OnRotateListner {
+//        float getRotation(float f);
+//    }
 
     private class ScaleGestureListener extends ScaleGestureDetector.SimpleOnScaleGestureListener implements ScaleGestureDetector.OnScaleGestureListener {
         private float mPivotX;
@@ -47,21 +47,34 @@ public class MultiTouchListener implements OnTouchListener {
             return true;
         }
 
-        public boolean onScale(View view, ScaleGestureDetector dHANVINE_ScaleGestureDetector) {
+        /**
+         * 处理缩放操作。
+         *
+         * @param view             执行缩放操作的视图
+         * @param scaleGestureDetector 缩放手势检测器
+         * @return 是否消耗事件
+         */
+        public boolean onScale(View view, ScaleGestureDetector scaleGestureDetector) {
             TransformInfo transformInfo = new TransformInfo();
-            transformInfo.deltaScale = MultiTouchListener.this.isScaleEnabled ? dHANVINE_ScaleGestureDetector.getScaleFactor() : 1.0f;
-            float f = 0.0f;
-            transformInfo.deltaAngle = MultiTouchListener.this.isRotateEnabled ? DHANVINE_Vector2D.getAngle(this.mPrevSpanVector, dHANVINE_ScaleGestureDetector.getCurrentSpanVector()) : 0.0f;
-            transformInfo.deltaX = MultiTouchListener.this.isTranslateEnabled ? dHANVINE_ScaleGestureDetector.getFocusX() - this.mPivotX : 0.0f;
-            if (MultiTouchListener.this.isTranslateEnabled) {
-                f = dHANVINE_ScaleGestureDetector.getFocusY() - this.mPivotY;
+            transformInfo.deltaScale = isScaleEnabled ? scaleGestureDetector.getScaleFactor() : 1.0f;
+            float deltaX = 0.0f;
+            float deltaY = 0.0f;
+            if (isRotateEnabled) {
+                transformInfo.deltaAngle = DHANVINE_Vector2D.getAngle(this.mPrevSpanVector, scaleGestureDetector.getCurrentSpanVector());
+            } else {
+                transformInfo.deltaAngle = 0.0f;
             }
-            transformInfo.deltaY = f;
+            if (isTranslateEnabled) {
+                deltaX = scaleGestureDetector.getFocusX() - this.mPivotX;
+                deltaY = scaleGestureDetector.getFocusY() - this.mPivotY;
+            }
+            transformInfo.deltaX = deltaX;
+            transformInfo.deltaY = deltaY;
             transformInfo.pivotX = this.mPivotX;
             transformInfo.pivotY = this.mPivotY;
-            transformInfo.minimumScale = MultiTouchListener.this.minimumScale;
-            transformInfo.maximumScale = MultiTouchListener.this.maximumScale;
-            MultiTouchListener.this.move(view, transformInfo);
+            transformInfo.minimumScale = minimumScale;
+            transformInfo.maximumScale = maximumScale;
+            move(view, transformInfo);
             return false;
         }
     }
@@ -84,10 +97,10 @@ public class MultiTouchListener implements OnTouchListener {
         return f > 180.0f ? f - 360.0f : f < -180.0f ? f + 360.0f : f;
     }
 
-    public MultiTouchListener(Activity activity , Boolean bool) {
+    public MultiTouchListener(Activity activity , Boolean forspiral) {
         this.mActivity = activity;
         this.forspiral = false;
-        this.forspiral = bool;
+        this.forspiral = forspiral;
         this.isRotateEnabled = true;
         this.isTranslateEnabled = true;
         this.isScaleEnabled = true;
@@ -127,40 +140,62 @@ public class MultiTouchListener implements OnTouchListener {
         }
     }
 
+    /**
+     * 处理触摸事件。
+     *
+     * @param view         执行触摸操作的视图
+     * @param motionEvent  触摸事件对象
+     * @return 是否消耗事件
+     */
     public boolean onTouch(View view, MotionEvent motionEvent) {
-        this.mScaleGestureDetector.onTouchEvent(view, motionEvent);
-        if (this.isTranslateEnabled) {
+        // 处理缩放手势
+        mScaleGestureDetector.onTouchEvent(view, motionEvent);
+
+        // 如果启用了平移功能
+        if (isTranslateEnabled) {
+            // 获取触摸事件的动作类型
             int action = motionEvent.getAction();
             int actionMasked = motionEvent.getActionMasked() & action;
-            int i = 0;
-            if (actionMasked == 6) {
-                int i2 = (65280 & action) >> 8;
-                if (motionEvent.getPointerId(i2) == this.mActivePointerId) {
-                    if (i2 == 0) {
-                        i = 1;
+
+            // 根据不同的动作类型进行处理
+            switch (actionMasked) {
+                case MotionEvent.ACTION_DOWN:
+                    // 记录按下时的位置和视图的边界矩形
+                    mPrevX = motionEvent.getX();
+                    mPrevY = motionEvent.getY();
+                    rect = new Rect(view.getLeft(), view.getTop(), view.getRight(), view.getBottom());
+                    mActivePointerId = motionEvent.getPointerId(0);
+                    break;
+
+                case MotionEvent.ACTION_POINTER_UP:
+                    // 处理多点触控的情况
+                    int pointerIndex = (action & MotionEvent.ACTION_POINTER_INDEX_MASK) >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
+                    int pointerId = motionEvent.getPointerId(pointerIndex);
+                    if (pointerId == mActivePointerId) {
+                        int newPointerIndex = pointerIndex == 0 ? 1 : 0;
+                        mPrevX = motionEvent.getX(newPointerIndex);
+                        mPrevY = motionEvent.getY(newPointerIndex);
+                        mActivePointerId = motionEvent.getPointerId(newPointerIndex);
                     }
-                    this.mPrevX = motionEvent.getX(i);
-                    this.mPrevY = motionEvent.getY(i);
-                    this.mActivePointerId = motionEvent.getPointerId(i);
-                }
-            } else if (actionMasked == 0) {
-                this.mPrevX = motionEvent.getX();
-                this.mPrevY = motionEvent.getY();
-                this.rect = new Rect(view.getLeft(), view.getTop(), view.getRight(), view.getBottom());
-                this.mActivePointerId = motionEvent.getPointerId(0);
-            } else if (actionMasked == 1) {
-                this.mActivePointerId = -1;
-            } else if (actionMasked == 2) {
-                int findPointerIndex = motionEvent.findPointerIndex(this.mActivePointerId);
-                if (findPointerIndex != -1) {
-                    float x = motionEvent.getX(findPointerIndex);
-                    float y = motionEvent.getY(findPointerIndex);
-                    if (!this.mScaleGestureDetector.isInProgress()) {
-                        adjustTranslation(view, x - this.mPrevX, y - this.mPrevY);
+                    break;
+
+                case MotionEvent.ACTION_MOVE:
+                    // 处理移动事件
+                    int pointerIndexMove = motionEvent.findPointerIndex(mActivePointerId);
+                    if (pointerIndexMove != -1) {
+                        float x = motionEvent.getX(pointerIndexMove);
+                        float y = motionEvent.getY(pointerIndexMove);
+                        if (!mScaleGestureDetector.isInProgress()) {
+                            adjustTranslation(view, x - mPrevX, y - mPrevY);
+                        }
                     }
-                }
-            } else if (actionMasked == 3) {
-                this.mActivePointerId = -1;
+                    break;
+
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
+                    // 清除活动指针ID
+                    mActivePointerId = -1;
+                    break;
             }
         }
         return true;

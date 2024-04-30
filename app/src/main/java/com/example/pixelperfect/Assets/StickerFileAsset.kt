@@ -5,6 +5,9 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import java.io.InputStream
 
+/**
+ * 贴纸数据
+ */
 object StickerFileAsset {
     @JvmStatic
     fun amojiList(): List<String> {

@@ -4,7 +4,9 @@ import android.graphics.Bitmap
 import org.wysaid.common.SharedContext
 import org.wysaid.nativePort.CGEImageHandler
 import java.text.MessageFormat
-
+/**
+ *滤镜数据
+ */
 object FilterFileAsset {
     @JvmField
     val FILTERS = arrayOf(

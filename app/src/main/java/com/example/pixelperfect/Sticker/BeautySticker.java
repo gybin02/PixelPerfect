@@ -26,14 +26,14 @@ public class BeautySticker extends Sticker {
     private Rect realBounds;
     private int type;
 
-    public BeautySticker(Context paramContext, int paramInt, Drawable paramDrawable) {
-        this.drawableSizeBoobs = SystemUtil.dpToPx(paramContext, 50);
-        this.drawableSizeHip1_Width = SystemUtil.dpToPx(paramContext, 150);
-        this.drawableSizeHip1_Height = SystemUtil.dpToPx(paramContext, 75);
-        this.drawableSizeFace_Height = SystemUtil.dpToPx(paramContext, 50);
-        this.drawableSizeFace_Width = SystemUtil.dpToPx(paramContext, 80);
-        this.type = paramInt;
-        this.drawable = paramDrawable;
+    public BeautySticker(Context context, int type, Drawable drawable) {
+        this.drawableSizeBoobs = SystemUtil.dpToPx(context, 50);
+        this.drawableSizeHip1_Width = SystemUtil.dpToPx(context, 150);
+        this.drawableSizeHip1_Height = SystemUtil.dpToPx(context, 75);
+        this.drawableSizeFace_Height = SystemUtil.dpToPx(context, 50);
+        this.drawableSizeFace_Width = SystemUtil.dpToPx(context, 80);
+        this.type = type;
+        this.drawable = drawable;
         this.realBounds = new Rect(0, 0, getWidth(), getHeight());
     }
 
@@ -72,8 +72,23 @@ public class BeautySticker extends Sticker {
         return this.type;
     }
 
+    /**
+     * 获取贴纸的宽度。
+     *
+     * @return 贴纸的宽度
+     */
     public int getWidth() {
-        return (this.type == 1 || this.type == 0) ? this.drawableSizeBoobs : ((this.type == 2) ? this.drawableSizeHip1_Width : ((this.type == 4) ? this.drawableSizeFace_Width : ((this.type == 10 || this.type == 11) ? this.height_Width : 0)));
+        if (this.type == 1 || this.type == 0) {
+            return this.drawableSizeBoobs;
+        } else if (this.type == 2) {
+            return this.drawableSizeHip1_Width;
+        } else if (this.type == 4) {
+            return this.drawableSizeFace_Width;
+        } else if (this.type == 10 || this.type == 11) {
+            return this.height_Width;
+        } else {
+            return 0;
+        }
     }
 
     public void release() {
@@ -92,8 +107,8 @@ public class BeautySticker extends Sticker {
         return this;
     }
 
-    public void setRadius(int paramInt) {
-        this.radius = paramInt;
+    public void setRadius(int radius) {
+        this.radius = radius;
     }
 
     public void updateRadius() {

@@ -6,23 +6,25 @@ import android.graphics.drawable.Drawable;
 
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
-
+/**
+ * 图片贴纸
+ */
 public class DrawableSticker extends Sticker {
     private Drawable drawable;
 
     private Rect realBounds; //真实的矩形位置
 
-    public DrawableSticker(Drawable paramDrawable) {
-        this.drawable = paramDrawable;
+    public DrawableSticker(Drawable drawable) {
+        this.drawable = drawable;
         this.realBounds = new Rect(0, 0, getWidth(), getHeight());
     }
 
-    public void draw(@NonNull Canvas paramCanvas) {
-        paramCanvas.save();
-        paramCanvas.concat(getMatrix());
+    public void draw(@NonNull Canvas canvas) {
+        canvas.save();
+        canvas.concat(getMatrix());
         this.drawable.setBounds(this.realBounds);
-        this.drawable.draw(paramCanvas);
-        paramCanvas.restore();
+        this.drawable.draw(canvas);
+        canvas.restore();
     }
 
     public int getAlpha() {

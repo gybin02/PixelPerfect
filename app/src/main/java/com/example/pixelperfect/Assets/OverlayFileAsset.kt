@@ -4,6 +4,9 @@ import android.graphics.Bitmap
 import org.wysaid.common.SharedContext
 import org.wysaid.nativePort.CGEImageHandler
 
+/**
+ * 遮罩层数据
+ */
 object OverlayFileAsset {
     @JvmField
     val OVERLAY_EFFECTS = arrayOf(
